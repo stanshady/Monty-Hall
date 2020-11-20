@@ -33,9 +33,8 @@ public class GameShow extends Pane {
         pick.setFont(new Font(40));
         pick.setFill(Color.DIMGRAY);
 
-
         change = new Text();
-        change.setText("              Do you want stay or switch?\nChoose a remaining door and press Final Choice");
+        change.setText("              Do you want to stay or switch?\nChoose a remaining door and press Final Choice");
         change.setTranslateX(120);
         change.setTranslateY(40);
         change.setFont(new Font(30));
@@ -60,7 +59,6 @@ public class GameShow extends Pane {
 
         this.getChildren().addAll(pick, change, win, lose);
     }
-
 
     public void clearArrows() {
         for (Door d : doors) {
