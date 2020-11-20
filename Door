@@ -1,0 +1,123 @@
+package MontyHall;
+
+import javafx.animation.FadeTransition;
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+
+public class Door extends Group {
+
+    private Rectangle doorFrame;
+    private Circle knob;
+    private Arrow arrow;
+    private boolean open, prize, arrowVisible;
+    private Text textPrize, textNum;
+    private int num;
+
+    Door(double x, double y, double width, double height, int num, boolean prize, GameShow gameShow) {
+        doorFrame = new Rectangle(x, y, width, height);
+        doorFrame.setFill(Color.LIGHTGRAY);
+        doorFrame.setStroke(Color.BLACK);
+        doorFrame.setStrokeWidth(2);
+
+        doorFrame.setOnMouseClicked(event -> {
+            if (!open) {
+                gameShow.clearArrows();
+                makeArrowVisible(true);
+                gameShow.setPicked(true);
+            }
+        });
+
+        textNum = new Text();
+        textNum.setText(String.valueOf(num));
+        textNum.setFont(new Font(60));
+        textNum.setFill(Color.BROWN);
+        textNum.setTranslateX(doorFrame.getX() + 0.4 * width);
+        textNum.setTranslateY(doorFrame.getY() - 0.05 * height);
+        textNum.setVisible(true);
+
+        textPrize = new Text();
+        if (prize) {
+            textPrize.setText("PRIZE!");
+            textPrize.setFill(Color.GREEN);
+        } else {
+            textPrize.setText("empty");
+            textPrize.setFill(Color.RED);
+        }
+
+        textPrize.setFont(new Font(40));
+        textPrize.setTranslateX(doorFrame.getX() + 0.25 * width);
+        textPrize.setTranslateY(doorFrame.getY() + 0.4 * height);
+        textPrize.setOpacity(0);
+
+        arrow = new Arrow(doorFrame.getX() + width / 2, doorFrame.getY() + height * 1.3,
+                doorFrame.getX() + width / 2, doorFrame.getY() + height * 1.1);
+        arrow.setVisible(false);
+
+
+        this.num = num;
+        this.prize = prize;
+
+        open = false;
+        arrowVisible = false;
+
+        knob = new Circle(doorFrame.getX() + 0.9 * width,
+                doorFrame.getY() + 0.5 * height, height / 40);
+
+
+        this.getChildren().addAll(doorFrame, knob, textPrize, arrow, textNum);
+    }
+
+    /*
+    Changes the background color, removes the knob,
+    updates boolean open and diplays "empty"
+     */
+    public void openDoor() {
+        open = true;
+        doorFrame.setFill(Color.WHITESMOKE);
+        textPrize.setVisible(true);
+
+        FadeTransition fadeKnob = new FadeTransition(Duration.millis(500), knob);
+        fadeKnob.setFromValue(1);
+        fadeKnob.setToValue(0);
+        fadeKnob.play();
+
+        FadeTransition fadePrize = new FadeTransition(Duration.millis(100), textPrize);
+        fadePrize.setDelay(Duration.millis(500));
+        fadePrize.setFromValue(0);
+        fadePrize.setToValue(1);
+
+        fadePrize.play();
+
+
+    }
+
+
+    public void makeArrowVisible(boolean visible) {
+        if (visible) {
+            arrow.setVisible(true);
+            arrowVisible = true;
+        } else {
+            arrow.setVisible(false);
+            arrowVisible = false;
+        }
+
+    }
+
+    public boolean isPrize() {
+        return prize;
+    }
+
+    public boolean isArrowVisible() {
+        return arrowVisible;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+}
