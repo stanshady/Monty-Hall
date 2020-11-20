@@ -69,9 +69,6 @@ public class Arrow extends Group {
         }
     }
 
-    ;
-
-
     // start/end properties
 
     public final void setStartX(double value) {
