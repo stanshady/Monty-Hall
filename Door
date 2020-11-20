@@ -16,9 +16,12 @@ public class Door extends Group {
     private Arrow arrow;
     private boolean open, prize, arrowVisible;
     private Text textPrize, textNum;
-    private int num;
 
     Door(double x, double y, double width, double height, int num, boolean prize, GameShow gameShow) {
+        this.prize = prize;
+        open = false;
+        arrowVisible = false;
+
         doorFrame = new Rectangle(x, y, width, height);
         doorFrame.setFill(Color.LIGHTGRAY);
         doorFrame.setStroke(Color.BLACK);
@@ -58,16 +61,8 @@ public class Door extends Group {
                 doorFrame.getX() + width / 2, doorFrame.getY() + height * 1.1);
         arrow.setVisible(false);
 
-
-        this.num = num;
-        this.prize = prize;
-
-        open = false;
-        arrowVisible = false;
-
         knob = new Circle(doorFrame.getX() + 0.9 * width,
                 doorFrame.getY() + 0.5 * height, height / 40);
-
 
         this.getChildren().addAll(doorFrame, knob, textPrize, arrow, textNum);
     }
@@ -92,10 +87,7 @@ public class Door extends Group {
         fadePrize.setToValue(1);
 
         fadePrize.play();
-
-
     }
-
 
     public void makeArrowVisible(boolean visible) {
         if (visible) {
@@ -105,7 +97,6 @@ public class Door extends Group {
             arrow.setVisible(false);
             arrowVisible = false;
         }
-
     }
 
     public boolean isPrize() {
@@ -119,5 +110,4 @@ public class Door extends Group {
     public boolean isOpen() {
         return open;
     }
-
 }
