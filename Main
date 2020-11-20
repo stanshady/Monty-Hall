@@ -1,0 +1,96 @@
+package MontyHall;
+
+import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+
+public class Main extends Application {
+
+    private Pane root;
+    private Button next, finalChoice, playAgain;
+    private GameShow gameShow;
+
+    private Parent initRoot() {
+        root = new Pane();
+
+        gameShow = new GameShow();
+
+        finalChoice = new Button("Final Choice");
+        finalChoice.setTranslateY(730);
+        finalChoice.setTranslateX(410);
+
+        finalChoice.setOnAction(event -> {
+            boolean isWon = false;
+            for (int i = 0; i < 3; i++) {
+                Door temp = gameShow.getDoors()[i];
+                if (temp.isPrize() && temp.isArrowVisible()) {
+                    isWon = true;
+                }
+                if (!temp.isOpen()) {
+                    temp.openDoor();
+                }
+            }
+            gameShow.setChangeTextVisible(false);
+            if (isWon)
+                gameShow.setWinTextVisible(true);
+            else
+                gameShow.setLoseTextVisible(true);
+
+            root.getChildren().remove(finalChoice);
+            root.getChildren().addAll(playAgain);
+        });
+
+
+        next = new Button("Next");
+        next.setTranslateY(730);
+        next.setTranslateX(430);
+
+        next.setOnAction(event -> {
+            if (!gameShow.getPicked()) {
+                event.consume();
+            } else {
+                ArrayList<Integer> temp = gameShow.makeOpenDoorList();
+                int rand = (int) (Math.random() * temp.size());
+                gameShow.getDoors()[temp.get(rand)].openDoor();
+                root.getChildren().remove(next);
+                root.getChildren().addAll(finalChoice);
+                gameShow.setPickTextVisible(false);
+                gameShow.setChangeTextVisible(true);
+            }
+
+        });
+
+        playAgain = new Button("Play Again?");
+        playAgain.setTranslateY(730);
+        playAgain.setTranslateX(410);
+
+        playAgain.setOnAction(event -> {
+            replay();
+            root.getChildren().remove(playAgain);
+            root.getChildren().addAll(next);
+        });
+
+
+        root.getChildren().addAll(gameShow, next);
+
+        return root;
+    }
+
+    private void replay() {
+        root.getChildren().remove(gameShow);
+        gameShow = new GameShow();
+        root.getChildren().addAll(gameShow);
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setScene(new Scene(initRoot()));
+        primaryStage.show();
+    }
+}
