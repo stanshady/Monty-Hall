@@ -1,0 +1,121 @@
+package MontyHall;
+
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import java.util.ArrayList;
+
+public class GameShow extends Pane {
+
+    private Door[] doors;
+    private Text pick, change, win, lose;
+    private boolean picked;
+
+    GameShow() {
+        setPrefSize(900, 800);
+        doors = new Door[3];
+        int rand = (int) (Math.random() * 3);
+        for (int i = 0; i < 3; i++) {
+            if (i == rand) {
+                doors[i] = new Door(100 + 250 * i, 175, 200, 400, i + 1, true, this);
+            } else {
+                doors[i] = new Door(100 + 250 * i, 175, 200, 400, i + 1, false, this);
+            }
+            this.getChildren().addAll(doors[i]);
+        }
+
+        pick = new Text();
+        pick.setText("Choose a door and then press Next");
+        pick.setTranslateX(120);
+        pick.setTranslateY(50);
+        pick.setFont(new Font(40));
+        pick.setFill(Color.DIMGRAY);
+
+
+        change = new Text();
+        change.setText("              Do you want stay or switch?\nChoose a remaining door and press Final Choice");
+        change.setTranslateX(120);
+        change.setTranslateY(40);
+        change.setFont(new Font(30));
+        change.setFill(Color.DIMGRAY);
+        change.setVisible(false);
+
+        win = new Text("You Win!");
+        win.setTranslateX(350);
+        win.setTranslateY(70);
+        win.setFont(new Font(50));
+        win.setFill(Color.GREEN);
+        win.setVisible(false);
+
+        lose = new Text("You Lose");
+        lose.setTranslateX(350);
+        lose.setTranslateY(70);
+        lose.setFont(new Font(50));
+        lose.setFill(Color.RED);
+        lose.setVisible(false);
+
+        picked = false;
+
+        this.getChildren().addAll(pick, change, win, lose);
+    }
+
+
+    public void clearArrows() {
+        for (Door d : doors) {
+            d.makeArrowVisible(false);
+        }
+    }
+
+    public ArrayList<Integer> makeOpenDoorList() {
+        ArrayList<Integer> ret = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            if (!doors[i].isArrowVisible() && !doors[i].isPrize()) {
+                ret.add(i);
+            }
+        }
+        return ret;
+    }
+
+    public void setPicked(boolean picked) {
+        this.picked = picked;
+    }
+
+    public boolean getPicked() {
+        return picked;
+    }
+
+    public Door[] getDoors() {
+        return doors;
+    }
+
+    public void setPickTextVisible(boolean visible) {
+        if (visible)
+            pick.setVisible(true);
+        else
+            pick.setVisible(false);
+    }
+
+    public void setChangeTextVisible(boolean visible) {
+        if (visible)
+            change.setVisible(true);
+        else
+            change.setVisible(false);
+    }
+
+    public void setWinTextVisible(boolean visible) {
+        if (visible)
+            win.setVisible(true);
+        else
+            win.setVisible(false);
+    }
+
+    public void setLoseTextVisible(boolean visible) {
+        if (visible)
+            lose.setVisible(true);
+        else
+            lose.setVisible(false);
+    }
+
+}
